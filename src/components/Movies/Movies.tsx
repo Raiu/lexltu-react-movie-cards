@@ -1,13 +1,23 @@
-import { createContext, Dispatch, ReactElement, useContext, useReducer, /* useState */ } from "react";
-import { IMovie, IMoviesAction, IMoviesProviderProps, TMoviesAction } from "@interfaces";
+import {
+    createContext,
+    Dispatch,
+    ReactElement,
+    useContext,
+    useReducer,
+} from "react";
+import {
+    IMovie,
+    IMoviesAction,
+    IMoviesProviderProps,
+    TMoviesAction,
+} from "@interfaces";
 import { movies as initialMovies } from "@data";
-
-/* type TMoviesContextType = IMovie[];
-type MoviesDispatchContextType = React.Dispatch<IMoviesAction>; */
 
 const MoviesContext = createContext<IMovie[] | null>(null);
 
-const MoviesDispatchContext = createContext<Dispatch<IMoviesAction> | null>(null);
+const MoviesDispatchContext = createContext<Dispatch<IMoviesAction> | null>(
+    null
+);
 
 export function Movies({ children }: IMoviesProviderProps): ReactElement {
     const [movies, action] = useReducer(moviesReducer, initialMovies);
@@ -21,37 +31,37 @@ export function Movies({ children }: IMoviesProviderProps): ReactElement {
     );
 }
 
-export function moviesReducer(movies: IMovie[], action: TMoviesAction): IMovie[] {
-    /* console.log(action)
-    console.log(movies) */
+export function moviesReducer(
+    movies: IMovie[],
+    action: TMoviesAction
+): IMovie[] {
     switch (action.type) {
         case "CREATE":
             if ("movie" in action) {
-                return [...movies, createMovie(action.movie, movies)]
+                return [...movies, createMovie(action.movie, movies)];
             }
             break;
 
         default:
-            return movies
+            return movies;
     }
-    return movies
+    return movies;
 }
 
 export function useMovies(): IMovie[] | null {
-    /* console.log(useMovies)
-    console.log(useContext(MoviesContext)) */
     return useContext(MoviesContext);
 }
 
-export function useMoviesDispatch(): Dispatch<IMoviesAction> | null  {
-    /* console.log(MoviesDispatchContext) */
+export function useMoviesDispatch(): Dispatch<IMoviesAction> | null {
     return useContext(MoviesDispatchContext);
 }
 
 function createMovie(movie: IMovie, movies: IMovie[]): IMovie {
-    const maxId = movies ? movies.reduce((maxId, movie) => {
-        return movie.id && movie.id > maxId ? movie.id : maxId;
-    }, 0) : 0;
+    const maxId = movies
+        ? movies.reduce((maxId, movie) => {
+            return movie.id && movie.id > maxId ? movie.id : maxId;
+        }, 0)
+        : 0;
 
     return {
         id: maxId + 1,
@@ -59,5 +69,5 @@ function createMovie(movie: IMovie, movies: IMovie[]): IMovie {
         rating: movie.rating,
         genre: movie.genre,
         description: movie.description,
-    }
+    };
 }
